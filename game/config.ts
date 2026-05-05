@@ -77,6 +77,7 @@ export const DEFAULT_USER = { odometer: STARTER_COINS, upgrades: { health: 0, ar
 export const TRANSLATIONS = {
   he: {
     gameTitle: '✈️ משחק המטוסים', subtitle: 'אסוף מטבעות, חסל אויבים!', startGame: 'התחל משחק',
+    quickPlay: 'משחק מהיר',
     enterName: '✈️ הכנס שם', namePlaceholder: 'השם שלך...', continue: 'המשך',
     password: 'סיסמה (4+ תווים)', passwordPlaceholder: 'בחר סיסמה...', wrongPassword: 'סיסמה שגויה!',
     userExists: 'שם תפוס!', userNotFound: 'משתמש לא נמצא', register: 'הרשמה', login: 'התחברות',
@@ -93,6 +94,7 @@ export const TRANSLATIONS = {
   },
   en: {
     gameTitle: '✈️ Plane Game', subtitle: 'Collect coins, destroy enemies!', startGame: 'Start Game',
+    quickPlay: 'Quick Play',
     enterName: '✈️ Enter Name', namePlaceholder: 'Your name...', continue: 'Continue',
     password: 'Password (4+ chars)', passwordPlaceholder: 'Choose password...', wrongPassword: 'Wrong password!',
     userExists: 'Name taken!', userNotFound: 'User not found', register: 'Register', login: 'Login',
@@ -109,6 +111,7 @@ export const TRANSLATIONS = {
   },
   es: {
     gameTitle: '✈️ Juego de Aviones', subtitle: '¡Recoge monedas, destruye enemigos!', startGame: 'Comenzar',
+    quickPlay: 'Juego rapido',
     enterName: '✈️ Tu Nombre', namePlaceholder: 'Tu nombre...', continue: 'Continuar',
     password: 'Contraseña (4+ chars)', passwordPlaceholder: 'Elige contraseña...', wrongPassword: '¡Contraseña incorrecta!',
     userExists: '¡Nombre ocupado!', userNotFound: 'Usuario no encontrado', register: 'Registrar', login: 'Entrar',
@@ -125,6 +128,7 @@ export const TRANSLATIONS = {
   },
   pt: {
     gameTitle: '✈️ Jogo de Aviões', subtitle: 'Colete moedas, destrua inimigos!', startGame: 'Começar',
+    quickPlay: 'Jogo rapido',
     enterName: '✈️ Seu Nome', namePlaceholder: 'Seu nome...', continue: 'Continuar',
     password: 'Senha (4+ chars)', passwordPlaceholder: 'Escolha senha...', wrongPassword: 'Senha errada!',
     userExists: 'Nome ocupado!', userNotFound: 'Usuário não encontrado', register: 'Registrar', login: 'Entrar',

@@ -179,6 +179,10 @@ export default function PlaneGame() {
     }
   };
   const sanitizeName = (n) => n.replace(/[^a-zA-Z0-9\u0590-\u05FF ]/g, '').trim().slice(0, 15);
+  const createGuestUser = () => {
+    const suffix = Math.floor(Math.random() * 9000 + 1000);
+    return { ...DEFAULT_USER, name: `Guest${suffix}`, password: '', isGuest: true };
+  };
 
   useEffect(() => {
     if (gameState === 'menu') {
@@ -260,7 +264,7 @@ export default function PlaneGame() {
   const getUpgradeCost = (key, lvl) => Math.floor(UPGRADES[key].baseCost * Math.pow(UPGRADES[key].costMult, lvl));
 
   const buyUpgrade = async (key) => {
-    if (!userData) return;
+    if (!userData || userData.isGuest) return;
     const lvl = userData.upgrades[key];
     if (lvl >= UPGRADES[key].max) return;
     const cost = getUpgradeCost(key, lvl);
@@ -299,6 +303,15 @@ export default function PlaneGame() {
     setGameState('playing');
   };
 
+  const startQuickPlay = () => {
+    const guestUser = createGuestUser();
+    setUserData(guestUser);
+    setPlayerName(guestUser.name);
+    setPassword('');
+    setAuthError('');
+    setGameState('lobby');
+  };
+
   const endGame = useCallback(async (won) => {
     sound.stopMusic();
     if (!sound.isMuted()) {
@@ -308,7 +321,7 @@ export default function PlaneGame() {
         setTimeout(() => sound.playGameOver(), 800);
       }
     }
-    if (userData) {
+    if (userData && !userData.isGuest) {
       const newData = { ...userData, odometer: userData.odometer + money };
       setUserData(newData);
       await storage.set(`plane-user-${userData.name.toLowerCase()}`, JSON.stringify(newData));
@@ -685,6 +698,12 @@ export default function PlaneGame() {
             className="min-w-[220px] px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 active:scale-100 transition-all duration-200 ring-4 ring-green-300/50 hover:ring-green-400/60 animate-pulse"
           >
             {t.startGame}
+          </button>
+          <button
+            onClick={() => onMenuClick(startQuickPlay)}
+            className="mt-3 min-w-[220px] px-8 py-3 bg-white/90 text-slate-900 text-lg font-bold rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 active:scale-100 transition-all duration-200 ring-2 ring-white/60"
+          >
+            {t.quickPlay}
           </button>
         </div>
         <p className="absolute bottom-4 left-0 right-0 text-center text-sm text-white/70 z-10">{t.credits}</p>
