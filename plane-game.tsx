@@ -5,6 +5,7 @@ import {
   POWERUP_SIZE,
   SCROLL_SPEED,
   WEAPON_DURATION,
+  STARTER_COINS,
   LEVELS,
   BOSS_CONFIG,
   THEMES,
@@ -244,7 +245,13 @@ export default function PlaneGame() {
       } else {
         if (!existingUser) { setAuthError(t.userNotFound); return; }
         if (existingUser.password !== password) { setAuthError(t.wrongPassword); return; }
-        setUserData(existingUser);
+        const migratedUser = existingUser.odometer >= STARTER_COINS
+          ? existingUser
+          : { ...existingUser, odometer: STARTER_COINS };
+        if (migratedUser !== existingUser) {
+          await storage.set(key, JSON.stringify(migratedUser));
+        }
+        setUserData(migratedUser);
         setGameState('lobby');
       }
     } catch (e) { setAuthError(t?.wrongPassword || 'Storage error'); }
@@ -282,7 +289,7 @@ export default function PlaneGame() {
     setShieldActive(false); setShieldTimer(0); shieldStartRef.current = 0;
     setBossBullets([]); setEnemyBullets([]);
     setCurrentWeapon(startWeapon); setWeaponTimer(0); weaponStartRef.current = 0;
-    setMoney(300); setPoints(0);
+    setMoney(STARTER_COINS); setPoints(0);
     setHealth(startHealth); setMaxHealth(startHealth); healthRef.current = startHealth;
     setBgOffset(0); setCurrentLevel(0); setLevelTimer(LEVELS[0].duration);
     setBossActive(false); setBoss(null); setBombFlash(false);
@@ -690,7 +697,7 @@ export default function PlaneGame() {
   if (gameState === 'enterName') {
     return (
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-sky-400 to-sky-200 p-4">
-        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-4 right-4 z-10" />
+        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-40" />
         <h1 className="text-3xl font-bold text-white mb-4">{t.enterName}</h1>
         <input
           type="text"
@@ -715,7 +722,7 @@ export default function PlaneGame() {
   if (gameState === 'auth') {
     return (
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-500 to-purple-600 p-4">
-        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-4 right-4 z-10" />
+        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-40" />
         <h1 className="text-3xl font-bold text-white mb-2">{authMode === 'register' ? t.register : t.login}</h1>
         <p className="text-white/80 mb-4">👤 {playerName}</p>
         <div className="bg-white/20 rounded-xl p-6 w-80">
@@ -750,7 +757,7 @@ export default function PlaneGame() {
   if (gameState === 'lobby') {
     return (
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-800 to-gray-900 p-4">
-        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-4 right-4 z-10" size="md" />
+        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-40" size="md" />
         <h1 className="text-2xl font-bold text-white mb-1">{t.choosePlane}</h1>
         <p className="text-green-400">✓ {userData?.name}</p>
         <p className="text-yellow-400 text-xl mb-3">💰 {userData?.odometer || 0}</p>
@@ -830,7 +837,7 @@ export default function PlaneGame() {
   if (gameState === 'shop') {
     return (
       <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-indigo-900 to-purple-900 p-4">
-        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-4 right-4 z-10" />
+        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-40" />
         <h1 className="text-2xl font-bold text-white mb-2">🛒 {t.shop}</h1>
         <p className="text-yellow-400 text-lg mb-4">💰 {userData?.odometer || 0}</p>
         <div className="grid grid-cols-2 gap-3 max-w-sm">
@@ -864,7 +871,7 @@ export default function PlaneGame() {
   if (gameState === 'gameOver' || gameState === 'victory') {
     return (
       <div className={`relative flex flex-col items-center justify-center min-h-screen p-4 ${gameState === 'victory' ? 'bg-gradient-to-b from-yellow-500 to-orange-500' : 'bg-gradient-to-b from-red-900 to-red-700'}`}>
-        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-4 right-4 z-10" />
+        <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-40" />
         <h1 className="text-3xl font-bold text-white mb-2">{gameState === 'victory' ? t.victory : t.crashed}</h1>
         <p className="text-xl text-yellow-400">{userData?.name}</p>
         <div className="bg-black/30 p-4 rounded-lg my-3 text-white text-center">

@@ -6,6 +6,7 @@ export const PLANE_WIDTH = 120;
 export const PLANE_HEIGHT = 50;
 export const PICKUP_RADII = { coin: 45, powerup: 40, heart: 40, bomb: 40, shield: 40 } as const;
 export const WEAPON_DURATION = 15000;
+export const STARTER_COINS = 300;
 
 export const LEVELS = [
   { duration: 20000, enemyRate: 0.02, theme: 'sky', enemyTypes: ['basic'] },
@@ -71,7 +72,7 @@ export const UPGRADES = {
   magnet: { max: 3, baseCost: 200, costMult: 1.8, icon: '🧲', effect: 50 }
 } as const;
 
-export const DEFAULT_USER = { odometer: 0, upgrades: { health: 0, armor: 0, weapon: 0, bombs: 0, speed: 0, magnet: 0 } };
+export const DEFAULT_USER = { odometer: STARTER_COINS, upgrades: { health: 0, armor: 0, weapon: 0, bombs: 0, speed: 0, magnet: 0 } };
 
 export const TRANSLATIONS = {
   he: {
