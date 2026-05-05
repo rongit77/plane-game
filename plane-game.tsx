@@ -282,7 +282,7 @@ export default function PlaneGame() {
     setShieldActive(false); setShieldTimer(0); shieldStartRef.current = 0;
     setBossBullets([]); setEnemyBullets([]);
     setCurrentWeapon(startWeapon); setWeaponTimer(0); weaponStartRef.current = 0;
-    setMoney(0); setPoints(0);
+    setMoney(300); setPoints(0);
     setHealth(startHealth); setMaxHealth(startHealth); healthRef.current = startHealth;
     setBgOffset(0); setCurrentLevel(0); setLevelTimer(LEVELS[0].duration);
     setBossActive(false); setBoss(null); setBombFlash(false);
@@ -881,7 +881,7 @@ export default function PlaneGame() {
   return (
     <ErrorBoundary>
     <div className="relative transition-opacity duration-300" style={{ opacity: screenFade ? 1 : 0 }}>
-      <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="absolute top-2 right-2 z-20" size="sm" />
+      <SoundControl sound={sound} muted={muted} setMuted={setMuted} t={t} className="fixed top-3 right-3 z-30" size="sm" />
     <GameCanvas
       gameWidth={gameWidth}
       gameHeight={gameHeight}

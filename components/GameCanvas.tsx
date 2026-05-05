@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LEVELS, THEMES, UPGRADES, COIN_SIZE, PICKUP_RADII, PLANE_WIDTH, PLANE_HEIGHT } from '../game/config';
 import { ParticleSystem } from '../game/particles';
 
@@ -81,9 +81,26 @@ export function GameCanvas(props: GameCanvasProps) {
   } = props;
 
   const currentTheme = THEMES[LEVELS[currentLevel]?.theme || 'sky'];
+  const [displayScale, setDisplayScale] = useState(1);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (typeof window === 'undefined') return;
+      const horizontalPadding = 16;
+      const reservedVerticalSpace = 170;
+      const availableWidth = Math.max(320, window.innerWidth - horizontalPadding);
+      const availableHeight = Math.max(220, window.innerHeight - reservedVerticalSpace);
+      const nextScale = Math.min(availableWidth / gameWidth, availableHeight / gameHeight, 1);
+      setDisplayScale(nextScale);
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [gameWidth, gameHeight]);
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-900 p-2">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-900 p-2 overflow-hidden">
       {/* HUD bar: semi-transparent dark, rounded bottom */}
       <div
         className="w-full max-w-[800px] flex flex-wrap items-center justify-between gap-2 px-3 py-2 mb-1 rounded-b-xl text-sm font-bold"
@@ -147,7 +164,11 @@ export function GameCanvas(props: GameCanvasProps) {
         </div>
       )}
 
-      <div className="relative inline-block">
+      <div
+        className="relative rounded-lg border-2 border-gray-700 shadow-2xl shadow-black/60 overflow-hidden"
+        style={{ width: gameWidth * displayScale, height: gameHeight * displayScale }}
+      >
+        <div style={{ width: gameWidth, height: gameHeight, transform: `scale(${displayScale})`, transformOrigin: 'top left' }}>
         {/* Level start overlay: fade in/out */}
         {levelOverlay && (
           <div
@@ -170,7 +191,7 @@ export function GameCanvas(props: GameCanvasProps) {
             </span>
           </div>
         )}
-      <svg width={gameWidth} height={gameHeight} className="border-2 border-gray-700 rounded-lg block">
+      <svg width={gameWidth} height={gameHeight} className="block">
         <defs>
           <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={bossActive ? '#2a1a1a' : currentTheme.sky1} />
@@ -389,6 +410,7 @@ export function GameCanvas(props: GameCanvasProps) {
           <ellipse key={b.id} cx={b.x} cy={b.y} rx={8} ry={3} fill={b.color} />
         ))}
       </svg>
+        </div>
       </div>
       <p className="text-gray-400 mt-1 text-xs">
         W/A/S/D - {lang === 'he' ? 'טיסה' : 'Fly'} | Click - {lang === 'he' ? 'ירי' : 'Shoot'} | Space - 💣
